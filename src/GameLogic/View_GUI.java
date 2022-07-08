@@ -21,6 +21,7 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
     private Stage stage;
     private BorderPane board;
     private Model_GameLogic game;
+    private Label gameLabel;
 
     public void init() {
         this.game = new Model_GameLogic();
@@ -54,10 +55,18 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
 
         size.setAlignment(Pos.CENTER);
         board.setRight(size);
+        board.setMinWidth(1250);
+        board.setMinHeight(1100);
+
+        this.gameLabel = new Label();
+        gameLabel.setText("Select a Board Size");
+        gameLabel.setAlignment(Pos.CENTER);
+        board.setTop(gameLabel);
 
         Scene scene = new Scene(board);
         stage.setScene(scene);
         stage.show();
+
 
         this.game.addObserver(this);
     }
@@ -85,6 +94,7 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
 
         flips.setAlignment(Pos.CENTER);
         board.setCenter(flips);
+        board.setMinSize(game.numRows*200, game.numCols*200);
     }
 
     public static void main(String[] args) {
