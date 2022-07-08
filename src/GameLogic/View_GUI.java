@@ -16,44 +16,73 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
-public class View_GUI extends Application{
+public class View_GUI extends Application implements Observer<Model_GameLogic, String>{
 
     private Stage stage;
     private BorderPane board;
-    private int numRows;
-    private int numCols;
     private Model_GameLogic game;
 
     public void init() {
-        String size = getParameters().getRaw().get(0);
-        System.out.println(size);
-        numRows = Integer.parseInt(String.valueOf(size.charAt(0)));
-        numCols = Integer.parseInt(String.valueOf(size.charAt(1)));
-        this.game = new Model_GameLogic(numRows, numCols);
-
+        this.game = new Model_GameLogic();
         this.board = new BorderPane();
     }
 
     public void start(Stage stage) {
-
-
         this.stage = stage;
+        GridPane size = new GridPane();
+        Button two = new Button();
+        Button four = new Button();
+        Button six = new Button();
 
-        createFlips();
+        two.setText("2x2");
+        two.setOnAction(actionEvent -> game.newGame(2, 2));
+        two.setMinHeight(100);
+        two.setMinWidth(100);
+        size.add(two, 0, 0);
+
+        four.setText("4x4");
+        four.setOnAction(actionEvent -> game.newGame(4, 4));
+        four.setMinHeight(100);
+        four.setMinWidth(100);
+        size.add(four, 0, 1);
+
+        six.setText("6x6");
+        six.setOnAction(actionEvent -> game.newGame(6, 6));
+        six.setMinHeight(100);
+        six.setMinWidth(100);
+        size.add(six, 0, 2);
+
+        size.setAlignment(Pos.CENTER);
+        board.setRight(size);
 
         Scene scene = new Scene(board);
         stage.setScene(scene);
         stage.show();
+
+        this.game.addObserver(this);
     }
 
-    public void createFlips(){
+    public void update(Model_GameLogic game, String gameState){
+
+        if (gameState.equals("load")){
+            createFlips(game);
+        }
+
+    }
+
+
+    public void createFlips(Model_GameLogic game){
         GridPane flips = new GridPane();
 
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
-                flips.add(new Button(), i, j);
+        for (int i = 0; i < game.numRows; i++) {
+            for (int j = 0; j < game.numCols; j++) {
+                Button temp = new Button();
+                temp.setMinWidth(150);
+                temp.setMinHeight(150);
+                flips.add(temp, i, j);
             }
         }
+
         flips.setAlignment(Pos.CENTER);
         board.setCenter(flips);
     }
