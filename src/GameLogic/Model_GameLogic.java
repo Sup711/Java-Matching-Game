@@ -45,6 +45,9 @@ public class Model_GameLogic{
 
     }
 
+    /**
+     * Creates a list of colors to be used for the upcoming game
+     */
     private void numToIntMap(){
         colorMap = new HashSet<Color>();
         Random rand = new Random();
