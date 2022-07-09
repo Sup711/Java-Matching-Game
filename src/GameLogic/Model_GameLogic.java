@@ -1,5 +1,7 @@
 package GameLogic;
 
+import javafx.scene.paint.Color;
+
 import java.util.*;
 
 public class Model_GameLogic{
@@ -19,7 +21,12 @@ public class Model_GameLogic{
 
 //-----------------------------------------------------------------------------------------------
 
+    public final Color[] COLORLIST = {Color.YELLOW, Color.RED, Color.GREEN, Color.BROWN, Color.AZURE,
+                                      Color.TEAL, Color.PURPLE, Color.NAVY, Color.ORANGE, Color.MAROON,
+                                      Color.CORAL, Color.FUCHSIA, Color.LIME, Color.HOTPINK, Color.GOLDENROD,
+                                      Color.PLUM, Color.OLIVE, Color.CYAN};
     public String[][] board;
+    public HashSet<Color> colorMap;
     public int numRows;
     public int numCols;
     private String[][] origBoard;
@@ -34,10 +41,20 @@ public class Model_GameLogic{
         System.out.println("Rows: " + numRows);
         System.out.println("Cols: " + numCols);
 
+        numToIntMap();
+
     }
 
     private void numToIntMap(){
+        colorMap = new HashSet<Color>();
+        Random rand = new Random();
+        int randIndex;
 
+        while (colorMap.size() < (numRows*numCols)/2){
+            randIndex = rand.nextInt(18);
+            colorMap.add(COLORLIST[randIndex]);
+        }
+        System.out.println(colorMap);
     }
 
     private void randomBoard(){
@@ -50,6 +67,11 @@ public class Model_GameLogic{
 
     public void select(){
 
+    }
+
+    @Override
+    public int hashCode(){
+        return Arrays.deepHashCode(COLORLIST);
     }
 
 
