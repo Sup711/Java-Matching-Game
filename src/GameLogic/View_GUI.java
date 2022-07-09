@@ -22,6 +22,7 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
     private BorderPane board;
     private Model_GameLogic game;
     private Label gameLabel;
+    private Button[][] matches;
 
     public void init() {
         this.game = new Model_GameLogic();
@@ -86,7 +87,7 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
         for (int i = 0; i < game.numRows; i++) {
             for (int j = 0; j < game.numCols; j++) {
                 Button temp = new Button();
-                temp.setBackground(new Background(new BackgroundFill(game.COLORLIST[3], new CornerRadii(5), Insets.EMPTY)));
+                temp.setBackground(new Background(new BackgroundFill(game.board[i][j], new CornerRadii(5), Insets.EMPTY)));
                 temp.setMinWidth(150);
                 temp.setMinHeight(150);
                 flips.add(temp, i, j);
