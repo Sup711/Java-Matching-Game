@@ -79,7 +79,7 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
             createFlips(game);
         }
         if (gameState.equals("select1")){
-            if (!game.starting && !prevGameState.equals("match")){
+            if (!prevGameState.equals("match")){
                 unflipCardsSelect(game);
             }
             System.out.println("Select 1 ... Row: " + game.select1[0] + " Col: " + game.select1[1]);

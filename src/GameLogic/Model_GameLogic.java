@@ -38,11 +38,9 @@ public class Model_GameLogic{
     public int[] select1;
     public int[] select2;
     public int[] prevSelect1;
-    public boolean starting;
 
 
     public void newGame(int numRows, int numCols){
-        starting = true;
         this.numRows = numRows;
         this.numCols = numCols;
         select1 = new int[]{-1, -1};
@@ -118,7 +116,6 @@ public class Model_GameLogic{
     }
 
     public void select(int i, int j){
-        starting = false;
         System.out.println("Behind Scenes ... Row : " + i + " Col : " + j);
         if (select1[0] == -1){
             select1[0] = i;
