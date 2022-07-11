@@ -34,12 +34,20 @@ public class Model_GameLogic{
     /** The collection of colors being used in the game */
     private Object[] colorMap;
     /** The original board, used for reset */
-    private String[][] origBoard;
+    private Color[][] origBoard;
+    public int[] select1;
+    public int[] select2;
+    public int[] prevSelect1;
+    public boolean starting;
 
 
     public void newGame(int numRows, int numCols){
+        starting = true;
         this.numRows = numRows;
         this.numCols = numCols;
+        select1 = new int[]{-1, -1};
+        select2 = new int[]{0, 0};
+        prevSelect1 = new int[]{0, 0};
 
         numToIntMap();
         randomBoard();
@@ -109,14 +117,34 @@ public class Model_GameLogic{
 
     }
 
-    public void select(){
-
+    public void select(int i, int j){
+        starting = false;
+        System.out.println("Behind Scenes ... Row : " + i + " Col : " + j);
+        if (select1[0] == -1){
+            select1[0] = i;
+            select1[1] = j;
+            this.alertObservers("select1");
+        }
+        else {
+            select2[0] = i;
+            select2[1] = j;
+            this.alertObservers("select2");
+            if (board[select1[0]][select1[1]].equals(board[i][j])){
+                this.alertObservers("match");
+            }
+            else {
+                this.alertObservers("noMatch");
+            }
+            prevSelect1[0] = select1[0];
+            prevSelect1[1] = select1[1];
+            select1[0] = -1;
+            select1[1] = -1;
+        }
     }
 
     @Override
     public int hashCode(){
         return Arrays.deepHashCode(COLORLIST);
     }
-
 
 }

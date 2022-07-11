@@ -22,7 +22,8 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
     private BorderPane board;
     private Model_GameLogic game;
     private Label gameLabel;
-    private Button[][] matches;
+    private Button[][] cards;
+    private String prevGameState;
 
     public void init() {
         this.game = new Model_GameLogic();
@@ -77,19 +78,63 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
         if (gameState.equals("load")){
             createFlips(game);
         }
+        if (gameState.equals("select1")){
+            if (!game.starting && !prevGameState.equals("match")){
+                unflipCardsSelect(game);
+            }
+            System.out.println("Select 1 ... Row: " + game.select1[0] + " Col: " + game.select1[1]);
+            flipCardsSelect1(game);
+        }
+        if (gameState.equals("select2")){
+            System.out.println("Select 2 ... Row: " + game.select2[0] + " Col: " + game.select2[1]);
+            flipCardsSelect2(game);
+        }
+        if (gameState.equals("match")){
+            System.out.println("Match");
+        }
+        if (gameState.equals("noMatch")){
+            System.out.println("No Match");
+        }
+        prevGameState = gameState;
+    }
 
+    public void flipCardsSelect1(Model_GameLogic game){
+        int select1i = game.select1[0];
+        int select1j = game.select1[1];
+        cards[select1i][select1j].setBackground(new Background(new BackgroundFill(game.board[select1i][select1j], new CornerRadii(5), Insets.EMPTY)));
+    }
+
+    public void flipCardsSelect2(Model_GameLogic game){
+        int select2i = game.select2[0];
+        int select2j = game.select2[1];
+        cards[select2i][select2j].setBackground(new Background(new BackgroundFill(game.board[select2i][select2j], new CornerRadii(5), Insets.EMPTY)));
+    }
+
+    public void unflipCardsSelect(Model_GameLogic game){
+        int select1i = game.prevSelect1[0];
+        int select1j = game.prevSelect1[1];
+        int select2i = game.select2[0];
+        int select2j = game.select2[1];
+        cards[select1i][select1j].setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(5), Insets.EMPTY)));
+        cards[select2i][select2j].setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(5), Insets.EMPTY)));
     }
 
 
+
     public void createFlips(Model_GameLogic game){
+        cards = new Button[game.numRows][game.numCols];
         GridPane flips = new GridPane();
 
         for (int i = 0; i < game.numRows; i++) {
             for (int j = 0; j < game.numCols; j++) {
                 Button temp = new Button();
-                temp.setBackground(new Background(new BackgroundFill(game.board[i][j], new CornerRadii(5), Insets.EMPTY)));
+                temp.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(5), Insets.EMPTY)));
                 temp.setMinWidth(150);
                 temp.setMinHeight(150);
+                int finalI = i;
+                int finalJ = j;
+                temp.setOnAction(event -> game.select(finalI, finalJ));
+                cards[i][j] = temp;
                 flips.add(temp, i, j);
             }
         }
