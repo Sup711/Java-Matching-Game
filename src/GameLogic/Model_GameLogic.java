@@ -35,13 +35,22 @@ public class Model_GameLogic{
     private Object[] colorMap;
     /** The original board, used for reset */
     private Color[][] origBoard;
+    /** The first user selection */
     public int[] select1;
+    /** The second user selection */
     public int[] select2;
+    /** The previous first user selection */
     public int[] prevSelect1;
+    /** The current game score */
     public int score;
 
-
+    /**
+     * Contains all the logic needed to generate a new game
+     * @param numRows the number of rows
+     * @param numCols the number of columns
+     */
     public void newGame(int numRows, int numCols){
+        /* Basic value initiation */
         this.numRows = numRows;
         this.numCols = numCols;
         score = 0;
@@ -49,13 +58,15 @@ public class Model_GameLogic{
         select2 = new int[]{0, 0};
         prevSelect1 = new int[]{0, 0};
 
+        /* Create the board */
         numToIntMap();
         randomBoard();
 
+        /* Used for reset */
         origBoard = board;
 
+        /* Letting the GUI know the game is ready */
         this.alertObservers("load");
-
     }
 
     /**
@@ -115,26 +126,43 @@ public class Model_GameLogic{
         }
     }
 
+    /**
+     * Resets the game and keep the same board
+     */
     public void reset(){
+        /* Same value initiation as newGame() */
         board = origBoard;
         score = 0;
         select1 = new int[]{-1, -1};
         select2 = new int[]{0, 0};
         prevSelect1 = new int[]{0, 0};
 
+        /* No board creation */
+
+        /* Tells the GUI reset is done */
         this.alertObservers("reset");
     }
 
+    /**
+     * Handles the card selection and game logic
+     * @param i the card i position
+     * @param j the car j position
+     */
     public void select(int i, int j){
+        /* Stores the first selection */
         if (select1[0] == -1){
             select1[0] = i;
             select1[1] = j;
+            /* Used to flip the card in GUI */
             this.alertObservers("select1");
         }
+        /* Stores the second selection */
         else {
             select2[0] = i;
             select2[1] = j;
+            /* Used to flip the card in GUI */
             this.alertObservers("select2");
+            /* Checks to see if the card matches */
             if (board[select1[0]][select1[1]].equals(board[i][j])){
                 score += 1;
                 this.alertObservers("match");
@@ -142,6 +170,7 @@ public class Model_GameLogic{
             else {
                 this.alertObservers("noMatch");
             }
+            /* Resets the selections */
             prevSelect1[0] = select1[0];
             prevSelect1[1] = select1[1];
             select1[0] = -1;
