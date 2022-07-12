@@ -18,42 +18,56 @@ import java.util.*;
 
 public class View_GUI extends Application implements Observer<Model_GameLogic, String>{
 
-    private Stage stage;
     private BorderPane board;
     private Model_GameLogic game;
     private Label gameLabel;
     private Button[][] cards;
     private String prevGameState;
-
-    public void init() {
-        this.game = new Model_GameLogic();
-        this.board = new BorderPane();
-    }
+    private Label score;
 
     public void start(Stage stage) {
-        this.stage = stage;
+        this.game = new Model_GameLogic();
+        this.board = new BorderPane();
         GridPane size = new GridPane();
+        GridPane top = new GridPane();
         Button two = new Button();
         Button four = new Button();
         Button six = new Button();
+        Button reset = new Button();
+        score = new Label();
+
+        score.setText("Score: " + 0);
+        score.setAlignment(Pos.CENTER);
+        score.setStyle("-fx-font: 24 Courier;");
+        size.add(score, 0, 0);
 
         two.setText("2x2");
+        two.setStyle("-fx-font: 24 Courier;");
         two.setOnAction(actionEvent -> game.newGame(2, 2));
         two.setMinHeight(100);
         two.setMinWidth(100);
-        size.add(two, 0, 0);
+        size.add(two, 0, 1);
 
         four.setText("4x4");
+        four.setStyle("-fx-font: 24 Courier;");
         four.setOnAction(actionEvent -> game.newGame(4, 4));
         four.setMinHeight(100);
         four.setMinWidth(100);
-        size.add(four, 0, 1);
+        size.add(four, 0, 2);
 
         six.setText("6x6");
+        six.setStyle("-fx-font: 24 Courier;");
         six.setOnAction(actionEvent -> game.newGame(6, 6));
         six.setMinHeight(100);
         six.setMinWidth(100);
-        size.add(six, 0, 2);
+        size.add(six, 0, 3);
+
+        reset.setText("Reset");
+        reset.setStyle("-fx-font: 24 Courier;");
+        reset.setOnAction(actionEvent -> game.reset());
+        reset.setMinHeight(100);
+        reset.setMinWidth(100);
+        size.add(reset, 0, 4);
 
         size.setAlignment(Pos.CENTER);
         board.setRight(size);
@@ -62,13 +76,14 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
 
         this.gameLabel = new Label();
         gameLabel.setText("Select a Board Size");
-        gameLabel.setAlignment(Pos.CENTER);
-        board.setTop(gameLabel);
+        gameLabel.setStyle("-fx-font: 24 Courier;");
+        top.add(gameLabel, 0, 0);
+        top.setAlignment(Pos.TOP_CENTER);
+        board.setTop(top);
 
         Scene scene = new Scene(board);
         stage.setScene(scene);
         stage.show();
-
 
         this.game.addObserver(this);
     }
@@ -77,23 +92,29 @@ public class View_GUI extends Application implements Observer<Model_GameLogic, S
 
         if (gameState.equals("load")){
             createFlips(game);
+            gameLabel.setText("Loaded a New Game");
+            score.setText("Score: " + 0);
+        }
+        if (gameState.equals("reset")){
+            createFlips(game);
+            gameLabel.setText("Reset the Game");
+            score.setText("Score: " + 0);
         }
         if (gameState.equals("select1")){
             if (!prevGameState.equals("match")){
                 unflipCardsSelect(game);
             }
-            System.out.println("Select 1 ... Row: " + game.select1[0] + " Col: " + game.select1[1]);
             flipCardsSelect1(game);
         }
         if (gameState.equals("select2")){
-            System.out.println("Select 2 ... Row: " + game.select2[0] + " Col: " + game.select2[1]);
             flipCardsSelect2(game);
         }
         if (gameState.equals("match")){
-            System.out.println("Match");
+            gameLabel.setText("Congrats, You Matched :)");
+            score.setText("Score: " + game.score);
         }
         if (gameState.equals("noMatch")){
-            System.out.println("No Match");
+            gameLabel.setText("Big Oof, You Failed to Match :(");
         }
         prevGameState = gameState;
     }

@@ -38,17 +38,21 @@ public class Model_GameLogic{
     public int[] select1;
     public int[] select2;
     public int[] prevSelect1;
+    public int score;
 
 
     public void newGame(int numRows, int numCols){
         this.numRows = numRows;
         this.numCols = numCols;
+        score = 0;
         select1 = new int[]{-1, -1};
         select2 = new int[]{0, 0};
         prevSelect1 = new int[]{0, 0};
 
         numToIntMap();
         randomBoard();
+
+        origBoard = board;
 
         this.alertObservers("load");
 
@@ -112,11 +116,16 @@ public class Model_GameLogic{
     }
 
     public void reset(){
+        board = origBoard;
+        score = 0;
+        select1 = new int[]{-1, -1};
+        select2 = new int[]{0, 0};
+        prevSelect1 = new int[]{0, 0};
 
+        this.alertObservers("reset");
     }
 
     public void select(int i, int j){
-        System.out.println("Behind Scenes ... Row : " + i + " Col : " + j);
         if (select1[0] == -1){
             select1[0] = i;
             select1[1] = j;
@@ -127,6 +136,7 @@ public class Model_GameLogic{
             select2[1] = j;
             this.alertObservers("select2");
             if (board[select1[0]][select1[1]].equals(board[i][j])){
+                score += 1;
                 this.alertObservers("match");
             }
             else {
