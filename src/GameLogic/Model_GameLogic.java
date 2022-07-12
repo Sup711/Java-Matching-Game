@@ -6,7 +6,6 @@ import java.util.*;
 
 public class Model_GameLogic{
 
-
     private final List<Observer<Model_GameLogic, String>> observers = new LinkedList<>();
 
     public void addObserver(Observer<Model_GameLogic, String> observer){
